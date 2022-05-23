@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="roomns">
+
+	<select id="getCount" resultType="int">
+		select count(room_id) from room
+	</select>
+
+	<select id="getList" parameterType="int" resultType="room">
+	    <![CDATA[
+		select * from (select rownum rnum, room.* from  
+	  	(select * from room order by room_id asc) room) 
+	    where rnum >= ((#{page}-1) * 9+1)  and rnum <= (#{page} * 9)
+		]]>
+	</select>
+
+</mapper>

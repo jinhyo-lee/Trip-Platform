@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mainns">
+
+	<select id="getPlaceList" resultType="place">
+	    <![CDATA[
+		select * from (select rownum rnum, place.* from  
+	  	(select * from place order by place_id asc) place) 
+	    where rnum >= 1  and rnum <= 9
+		]]>
+	</select>
+	
+	<select id="getFoodList" resultType="food">
+	    <![CDATA[
+		select * from (select rownum rnum, food.* from  
+	  	(select * from food order by food_id asc) food) 
+	    where rnum >= 1  and rnum <= 12
+		]]>
+	</select>
+
+	<select id="getRoomList" resultType="room">
+	    <![CDATA[
+		select * from (select rownum rnum, room.* from  
+	  	(select * from room order by room_id asc) room) 
+	    where rnum >= 1  and rnum <= 8
+		]]>
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
