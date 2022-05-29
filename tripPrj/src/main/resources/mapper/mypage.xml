@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mypagens">
+	
+	<!-- 회원정보 호출 -->
+	<select id="user_detail" parameterType="String" resultType="member">
+    	select * from member where id=#{id}
+    </select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="mypage_modify" parameterType="member">
+		update member set pw=#{pw}, name=#{name}, tel=#{tel}, mail=#{mail},
+		post=#{post}, addr1=#{addr1}, addr2=#{addr2}, profile=#{profile, jdbcType=VARCHAR}
+		where id=#{id}
+	</update>
+
+	<!-- 회원탈퇴 -->
+	<update id="mypage_delete" parameterType="member"> 
+ 		update member set quit='y' where id=#{id}
+	</update>
+	
+</mapper>
