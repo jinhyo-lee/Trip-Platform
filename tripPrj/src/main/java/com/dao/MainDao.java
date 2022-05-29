@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.model.FoodBean;
+import com.model.MemberBean;
 import com.model.PlaceBean;
 import com.model.RoomBean;
 
@@ -13,6 +14,10 @@ public class MainDao {
 	
 	@Autowired
 	private SqlSession session;
+	
+	public MemberBean getMember(String id) throws Exception {
+		return session.selectOne("mainns.getMember", id);
+	}
 	
 	public List<PlaceBean> getPlaceList() throws Exception {
 		List<PlaceBean> placeList = session.selectList("mainns.getPlaceList");
@@ -31,6 +36,5 @@ public class MainDao {
 
 		return roomList;
 	}
-
 	
 }

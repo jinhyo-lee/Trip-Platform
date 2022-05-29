@@ -3,6 +3,10 @@
 
 <mapper namespace="mainns">
 
+	<select id="getMember" parameterType="String" resultType="member">
+    	select * from member where id=#{id, jdbcType=VARCHAR}
+    </select>
+
 	<select id="getPlaceList" resultType="place">
 	    <![CDATA[
 		select * from (select rownum rnum, place.* from  
@@ -28,25 +32,3 @@
 	</select>
 
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
