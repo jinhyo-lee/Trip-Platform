@@ -3,22 +3,76 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mypagens">
-	
-	<!-- 회원정보 호출 -->
-	<select id="user_detail" parameterType="String" resultType="member">
-    	select * from member where id=#{id}
-    </select>
-	
-	<!-- 회원정보 수정 -->
-	<update id="mypage_modify" parameterType="member">
-		update member set pw=#{pw}, name=#{name}, tel=#{tel}, mail=#{mail},
-		post=#{post}, addr1=#{addr1}, addr2=#{addr2}, profile=#{profile, jdbcType=VARCHAR}
-		where id=#{id}
+
+	<!-- 수정 -->
+	<update id="modify" parameterType="member">
+		update member set
+			pw=#{pw},
+			name=#{name},
+			tel=#{tel},
+			mail=#{mail},
+			post=#{post},
+			addr1=#{addr1}, 
+			addr2=#{addr2}, 
+			profile=#{profile, jdbcType=VARCHAR}
+		where id = #{id}
 	</update>
 
-	<!-- 회원탈퇴 -->
-	<update id="mypage_delete" parameterType="member"> 
- 		update member set quit='y' where id=#{id}
+	<!-- 탈퇴 -->
+	<update id="quit" parameterType="String">
+		update member set quit='y' where id = #{id}
 	</update>
-	
+
+	<!-- 북마크 목록 -->
+	<select id="getFoodmark" parameterType="String" resultType="foodbookmark">
+		select * from food f, foodbookmark fbm where f.food_id = fbm.food_id and fbm.id = #{id}
+	</select>
+
+	<select id="getPlacemark" parameterType="String" resultType="placebookmark">
+		select * from place p, placebookmark pbm where p.place_id = pbm.place_id and pbm.id = #{id}
+	</select>
+
+	<select id="getRoommark" parameterType="String" resultType="roombookmark">
+		select * from room r, roombookmark rbm where r.room_id = rbm.room_id and rbm.id = #{id}
+	</select>
+
+	<!-- 북마크 삭제 -->
+	<delete id="deleteFoodmark" parameterType="foodbookmark">
+		delete from foodbookmark where food_mark_id = #{food_mark_id} and id = #{id}
+	</delete>
+
+	<delete id="deletePlacemark" parameterType="placebookmark">
+		delete from placebookmark where place_mark_id = #{place_mark_id} and id = #{id}
+	</delete>
+
+	<delete id="deleteRoommark" parameterType="roombookmark">
+		delete from roombookmark where room_mark_id = #{room_mark_id} and id = #{id}
+	</delete>
+
+	<!-- 리뷰 목록 -->
+	<select id="getFoodreview" parameterType="String" resultType="foodreview">
+		select * from foodreview where id = #{id}
+	</select>
+
+	<select id="getPlacereview" parameterType="String" resultType="placereview">
+		select * from placereview where id = #{id}
+	</select>
+
+	<select id="getRoomreview" parameterType="String" resultType="roomreview">
+		select * from roomreview where id = #{id}
+	</select>
+
+	<!-- 문의 목록 -->
+	<select id="getFoodqna" parameterType="String" resultType="foodqna">
+		select * from foodqna where id = #{id}
+	</select>
+
+	<select id="getPlaceqna" parameterType="String" resultType="placeqna">
+		select * from placeqna where id = #{id}
+	</select>
+
+	<select id="getRoomqna" parameterType="String" resultType="roomqna">
+		select * from roomqna where id = #{id}
+	</select>
+
 </mapper>

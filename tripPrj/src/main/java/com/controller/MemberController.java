@@ -26,7 +26,7 @@ public class MemberController {
 	private MemberService service;
 
 	// 로그인 폼
-	@RequestMapping(value = "loginForm")
+	@RequestMapping("loginForm")
 	public String loginForm() {
 		return "member/member_loginform";
 	}
@@ -37,7 +37,7 @@ public class MemberController {
 			Model model) throws Exception {
 
 		int result = 0;
-		MemberBean member = service.userCheck(id);
+		MemberBean member = service.getMember(id);
 
 		if (member == null) {
 			result = 1;
@@ -62,22 +62,22 @@ public class MemberController {
 
 	}
 
-	// 비밀번호 찾기 폼
-	@RequestMapping(value = "pwFind")
+	// 비밀번호 검색 폼
+	@RequestMapping("pwFind")
 	public String pwFind() {
 		return "member/member_pwfind";
 	}
 
-	// 비밀번호 찾기
+	// 비밀번호 검색
 	@RequestMapping(value = "pwFindOk", method = RequestMethod.POST)
 	public String pwFindOk(@ModelAttribute MemberBean mem, HttpServletResponse response, Model model) throws Exception {
+
 		response.setContentType("text/html;charset=UTF-8");
 
 		MemberBean member = service.pwFind(mem);
-
 		int result = 0;
 		if (member == null || member.getQuit().equals("y")) {
-			return "member/member_pwresult";
+			return "member/member_unmatch";
 		} else {
 			String charSet = "utf-8";
 			String hostSMTP = "smtp.naver.com";
@@ -92,17 +92,19 @@ public class MemberController {
 				HtmlEmail email = new HtmlEmail();
 				email.setDebug(true);
 				email.setCharset(charSet);
-				email.setSSL(true);
+				email.setSSLOnConnect(true);
 				email.setHostName(hostSMTP);
-				email.setSmtpPort(587);
+				email.setSslSmtpPort("587");
 
 				email.setAuthentication(hostSMTPid, hostSMTPpwd);
-				email.setTLS(true);
+				email.setStartTLSEnabled(true);
 				email.addTo(mail, charSet);
 				email.setFrom(fromEmail, fromName, charSet);
 				email.setSubject(subject);
-				email.setHtmlMsg("<p align = 'center'><b>" + member.getName() + "</b>님의 비밀번호는</p><br>" + "<div align='center'>" + member.getPw() + "입니다.</div>");
+				email.setHtmlMsg("<p align = 'center'><b>" + member.getName() + "</b>님의 비밀번호는</p><br>"
+						+ "<div align='center'>" + member.getPw() + "입니다.</div>");
 				email.send();
+
 				result = 1;
 			} catch (Exception e) {
 				System.out.println(e);
@@ -115,8 +117,8 @@ public class MemberController {
 
 	}
 
-	// 회원가입 폼
-	@RequestMapping(value = "joinForm")
+	// 회원 가입 폼
+	@RequestMapping("joinForm")
 	public String joinForm() {
 		return "member/member_joinform";
 	}
@@ -128,9 +130,7 @@ public class MemberController {
 
 		String filename = mf.getOriginalFilename();
 		int size = (int) mf.getSize();
-
-		String path = request.getRealPath("upload");
-		System.out.println("path:" + path);
+		String path = request.getSession().getServletContext().getRealPath("upload");
 
 		int result = 0;
 		String file[] = new String[2];
@@ -140,37 +140,37 @@ public class MemberController {
 			StringTokenizer st = new StringTokenizer(filename, ".");
 			file[0] = st.nextToken();
 			file[1] = st.nextToken();
-			UUID uuid = UUID.randomUUID();
 
+			UUID uuid = UUID.randomUUID();
 			newfilename = uuid.toString() + "." + file[1];
-			System.out.println("newfilename:" + newfilename);
 			if (size > 10000000) {
 				result = 1;
 				model.addAttribute("result", result);
 
-				return "member/member_uploadresult";
+				return "alert/upload_alert";
 			} else if (!file[1].equals("jpg") && !file[1].equals("gif") && !file[1].equals("jpeg")
 					&& !file[1].equals("png")) {
 				result = 2;
 				model.addAttribute("result", result);
 
-				return "member/member_uploadresult";
+				return "alert/upload_alert";
 			}
 		}
 
 		if (size > 0) {
 			mf.transferTo(new File(path + "/" + newfilename));
 		}
-
 		member.setProfile(newfilename);
+
 		service.joinMember(member);
 
 		return "redirect:main";
 	}
 
-	// ID 중복검사
+	// 아이디 중복 검사
 	@RequestMapping(value = "idcheck", method = RequestMethod.POST)
 	public String idcheck(@RequestParam("memid") String id, Model model) throws Exception {
+
 		int result = service.checkMemberId(id);
 		model.addAttribute("result", result);
 
@@ -179,7 +179,7 @@ public class MemberController {
 
 	// 이메일 인증
 	@RequestMapping("sendmail")
-	public String send(String mail, Model model) {
+	public String sendmail(String mail, Model model) {
 
 		Random random = new Random();
 		int auth = random.nextInt(888888) + 111111;
@@ -197,16 +197,17 @@ public class MemberController {
 			HtmlEmail email = new HtmlEmail();
 			email.setDebug(true);
 			email.setCharset(charSet);
-			email.setSSL(true);
+			email.setSSLOnConnect(true);
 			email.setHostName(hostSMTP);
-			email.setSmtpPort(587);
+			email.setSslSmtpPort("587");
 
 			email.setAuthentication(hostSMTPid, hostSMTPpwd);
-			email.setTLS(true);
+			email.setStartTLSEnabled(true);
 			email.addTo(mail, charSet);
 			email.setFrom(fromEmail, fromName, charSet);
 			email.setSubject(subject);
-			email.setHtmlMsg("<p align = 'center'><b>회원가입을 환영합니다.</b></p><br>" + "<div align='center'> 인증번호 : " + auth + "</div>");
+			email.setHtmlMsg("<p align = 'center'><b>회원가입을 환영합니다.</b></p><br>" + "<div align='center'> 인증번호 : " + auth
+					+ "</div>");
 			email.send();
 		} catch (Exception e) {
 			System.out.println(e);
@@ -220,9 +221,28 @@ public class MemberController {
 	// 로그아웃
 	@RequestMapping("logout")
 	public String logout(HttpSession session) {
+
 		session.invalidate();
 
 		return "member/member_logout";
+	}
+
+	// 카카오 회원 가입 및 로그인 정보 호출
+	@RequestMapping(value = "/kakaoLogin", method = RequestMethod.GET)
+	public String kakaoLogin(@RequestParam(value = "code", required = false) String code, Model model,
+			HttpSession session) throws Exception {
+
+		String access_Token = service.getAccessToken(code); // 엑세스 코드 생성
+		MemberBean userInfo = service.getUserInfo(access_Token); // 카카오 정보 반환
+
+		if (userInfo.getId() != null) {
+			session.setAttribute("id", userInfo.getId());
+			session.setAttribute("access_Token", access_Token);
+		}
+
+		model.addAttribute("idok", "1234");
+
+		return "modal";
 	}
 
 }

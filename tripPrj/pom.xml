@@ -19,28 +19,41 @@
 	</properties>
 	<dependencies>
 	
+		<!-- boot -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
 		<!-- jstl -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.2</version>
 		</dependency>
 		
-		<!-- Email -->
+		<!-- email -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
-			<version>1.3.3</version>
+			<version>1.5</version>
 		</dependency>
 		
-		<!-- fileupload -->
+		<!-- file upload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>1.2</version>
+			<version>1.3.3</version>
 		</dependency>
 		
-		<!-- Email 전송 -->
+		<!-- file io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		
+		<!-- email transfer -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
@@ -50,6 +63,33 @@
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        
+        <!-- kakao login -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>	
+		
+		<!-- oracle cloud -->
+	    <dependency>
+		    <groupId>com.oracle.database.jdbc</groupId>
+		    <artifactId>ucp</artifactId>
+		</dependency>
+	    <dependency>
+	        <groupId>com.oracle.database.security</groupId>
+	        <artifactId>oraclepki</artifactId>
+	        <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.oracle.database.security</groupId>
+	        <artifactId>osdt_cert</artifactId>
+	        <scope>runtime</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.oracle.database.security</groupId>
+	        <artifactId>osdt_core</artifactId>
+	        <scope>runtime</scope>
+	    </dependency>
 	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

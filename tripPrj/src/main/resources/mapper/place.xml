@@ -3,38 +3,162 @@
 
 <mapper namespace="placens">
 
-	<select id="getCount" resultType="int">
-		select count(place_id) from place
-	</select>
-
+	<!-- 목록 -->
 	<select id="getList" parameterType="int" resultType="place">
 	    <![CDATA[
 		select * from (select rownum rnum, place.* from  
 	  	(select * from place order by place_id asc) place) 
-	    where rnum >= ((#{page}-1) * 10+1)  and rnum <= (#{page} * 10)
+	    where rnum >= ((#{page}-1) * 5+1)  and rnum <= (#{page} * 5)
 		]]>
 	</select>
 	
+	<!-- 필터 -->
+	<select id="getFilterList" parameterType="placeFilter" resultType="place">
+	    <![CDATA[ 
+		select * from (select rownum rnum, place.* from
+		]]>
+	  	(select * from place where place_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and place_addr like '%' || #{district, jdbcType=VARCHAR} || '%'
+	  	 <if test='rate > 0'>
+			<![CDATA[ 
+			and place_rate >= #{rate, jdbcType=VARCHAR} and place_rate < #{rate, jdbcType=VARCHAR} + 1
+			]]>
+		</if>
+		<if test='act.size != 0'>
+			and place_act in
+			<foreach item="actChk" index="idx" collection="act" open="(" separator="," close=")">
+				#{actChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='type.size != 0'>
+			and place_type in
+			<foreach item="typeChk" index="idx" collection="type" open="(" separator="," close=")">
+				#{typeChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<![CDATA[ 
+	  	order by place_id asc) place ) 
+	    where rnum >= ((#{page, jdbcType=INTEGER}-1) * 5+1)  and rnum <= (#{page, jdbcType=INTEGER} * 5)
+	    ]]>
+	</select>
+
+	<select id="getFilterCount" parameterType="placeFilter" resultType="int">
+		select count(place_id) from
+		( select * from place where place_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and place_addr like '%' || #{district, jdbcType=VARCHAR} || '%'
+		<if test='rate > 0'>
+			<![CDATA[ 
+			and place_rate >= #{rate, jdbcType=VARCHAR} and place_rate < #{rate, jdbcType=VARCHAR} + 1
+			]]>
+		</if>
+		<if test='act.size != 0'>
+			and place_act in
+			<foreach item="actChk" index="idx" collection="act" open="(" separator="," close=")">
+				#{actChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='type.size != 0'>
+			and place_type in
+			<foreach item="typeChk" index="idx" collection="type" open="(" separator="," close=")">
+				#{typeChk, jdbcType=VARCHAR}
+			</foreach>
+		</if> )
+	</select>
+
+	<!-- 상세 -->
+	<select id="getDetail" parameterType="int" resultType="place">
+		select * from place where place_id = #{place_id}
+	</select>
+
+	<!-- 데이터 수 -->
+	<select id="getCount" resultType="int">
+		select count(place_id) from place
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insert" parameterType="place">
+		insert into place (
+						   place_id,
+						   place_name,
+						   place_content,
+						   place_photo,
+						   place_addr,
+						   place_tel,
+						   place_hour,
+						   place_act,
+						   place_type,
+						   place_rate )
+				   values (
+						   place_seq.nextval,
+						   #{place_name, jdbcType=VARCHAR},
+						   #{place_content, jdbcType=VARCHAR},
+						   #{place_photo, jdbcType=VARCHAR},
+						   #{place_addr, jdbcType=VARCHAR},
+						   #{place_tel, jdbcType=VARCHAR},
+						   #{place_hour, jdbcType=VARCHAR},
+						   #{place_act, jdbcType=VARCHAR},
+						   #{place_type, jdbcType=VARCHAR},
+						   #{place_rate, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modify" parameterType="place">
+		update place set
+			place_name=#{place_name, jdbcType=VARCHAR},
+			place_content=#{place_content, jdbcType=VARCHAR},
+			place_photo=#{place_photo, jdbcType=VARCHAR},
+			place_addr=#{place_addr, jdbcType=VARCHAR},
+			place_tel=#{place_tel, jdbcType=VARCHAR},
+			place_hour=#{place_hour, jdbcType=VARCHAR},
+			place_act=#{place_act, jdbcType=VARCHAR},
+			place_type=#{place_type, jdbcType=VARCHAR},
+			place_rate=#{place_rate, jdbcType=VARCHAR}
+		where place_id=#{place_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from place where place_id=#{place_id}
+	</delete>
+
+	<!-- 인근 장소 -->
+	<select id="getQueryList" parameterType="String" resultType="place">
+		 <![CDATA[
+		 select * from
+		 (select place_id, place_name, place_addr, place_type, place_rate, place_photo from place ORDER BY dbms_random.value)
+         where place_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+         union all
+         select * from
+         (select food_id, food_name, food_addr, food_type, food_rate, food_photo from food ORDER BY dbms_random.value)
+         where food_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+         union all
+         select * from
+         (select room_id, room_name, room_addr, room_type, room_rate, room_photo from room ORDER BY dbms_random.value)
+         where room_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+		]]>
+	</select>
+	
+	<!-- 평점 갱신 -->
+	<update id="updateRate" parameterType="place">
+		update place set place_rate=#{place_rate, jdbcType=VARCHAR} where place_id=#{place_id}
+	</update>
+
+	<!-- 북마크 -->
+	<select id="getMarkCount" parameterType="placebookmark" resultType="int">
+		select count(place_id) from placebookmark where id=#{id, jdbcType=VARCHAR} and place_id=#{place_id, jdbcType=INTEGER}
+	</select>
+
+	<insert id="addMark" parameterType="placebookmark">
+		insert into placebookmark (
+								   place_mark_id,
+								   place_id,
+								   id )
+						   values (
+								   place_bookmark_seq.nextval,
+								   #{place_id, jdbcType=INTEGER},
+								   #{id, jdbcType=VARCHAR})
+	</insert>
+
+	<delete id="delMark" parameterType="placebookmark">
+		delete from placebookmark where id=#{id, jdbcType=VARCHAR} and place_id=#{place_id, jdbcType=INTEGER}
+	</delete>
+
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

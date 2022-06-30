@@ -265,7 +265,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         format: {
           to: function to(value) {
-            return '$' + parseInt(value, 10);
+            return '₩' + parseInt(value, 10);
           },
           from: function from(value) {
             return Number(value);

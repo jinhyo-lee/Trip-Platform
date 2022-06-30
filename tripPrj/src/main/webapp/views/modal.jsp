@@ -6,6 +6,25 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script type="text/javascript" src="func/member.js"></script>
 
+<script>
+	var mywin; // local var
+</script>
+
+<!-- auth val  -->
+<c:if test="${!empty idok }"> 
+<script>
+	window.opener.location.reload();
+	window.close();
+</script>
+</c:if>	
+
+<c:if test="${empty idok }">
+<script>
+	function popupKakaoLogin() {
+		mywin = window.open('https://kauth.kakao.com/oauth/authorize?client_id=7e436f026896af8927b747e85c5fd911&redirect_uri=http://localhost/kakaoLogin&response_type=code','popupKakaoLogin', 'width=700,height=500,scrollbars=0,toolbar=0,menubar=no');	
+	}
+</script>
+
 <div class="modal fade" id="signin-modal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered p-2 my-0 mx-auto" style="max-width: 450px;">
 		<div class="modal-content">
@@ -13,9 +32,7 @@
 				<button class="btn-close position-absolute top-0 end-0 mt-3 me-3" type="button" data-bs-dismiss="modal"></button>
 				    <div class="row mx-2 align-items-center">
 					<div class="col-md-12 px-5 pt-5 pb-5 px-sm-8 pb-sm-8 pt-md-8">
-						<a class="btn btn-outline-info d-block w-100 mb-3" href="#">
-						<i class="fi-google fs-lg me-1"></i>구글로 로그인하기</a>
-						<a class="btn btn-outline-warning d-block w-100 mb-3" href="#">
+						<a class="btn btn-outline-warning d-block w-100 mb-3" onclick="popupKakaoLogin()" href="#">
 						<i class="fi-chat-circle fs-lg me-1"></i> 카카오로 로그인하기</a>
 						<div class="d-flex align-items-center py-3 mb-1">
 							<hr class="w-100">
@@ -32,7 +49,6 @@
 							<div class="mb-3">
 								<div class="d-flex align-items-center justify-content-between mb-2">
 								<label class="form-label mb-0" for="signin-password">비밀번호</label>
-								<a class="fs-sm" href="#pwfind-modal" data-bs-toggle="modal" data-bs-dismiss="modal">비밀번호를 잊으셨나요?</a>
 								</div>
 								<div class="mb-3">
 									<div class="password-toggle">
@@ -44,8 +60,7 @@
 									</div>
 								</div>      
 								<div class="form-check mb-3">
-									<input class="form-check-input" type="checkbox" id="agree-to-terms"> 
-									<label class="form-check-label" for="agree-to-terms">로그인 유지</label>
+									<a class="fs-sm" href="#pwfind-modal" data-bs-toggle="modal" data-bs-dismiss="modal" style="float: right">비밀번호를 잊으셨나요?</a>
 								</div>
 							</div>
 							<div id="loginmenu">
@@ -173,3 +188,59 @@
 		</div>
 	</div>
 </div>
+</c:if>
+
+<!-- food delete modal-->
+<form method="post" action="foodDelete" onsubmit="return del_check()">
+	<input type="hidden" name="food_id" value="${food.food_id}" />
+	<input type="hidden" name="page" value="${page}" />
+	<div class="modal fade" id="food-delete-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="width: 24rem;">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p>정말 삭제 하시겠습니까?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary btn-sm">삭제</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- place delete modal-->
+<form method="post" action="placeDelete" onsubmit="return del_check()">
+	<input type="hidden" name="place_id" value="${place.place_id}" />
+	<input type="hidden" name="page" value="${page}" />
+	<div class="modal fade" id="place-delete-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="width: 24rem;">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p>정말 삭제 하시겠습니까?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary btn-sm">삭제</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- room delete modal-->
+<form method="post" action="roomDelete" onsubmit="return del_check()">
+	<input type="hidden" name="room_id" value="${room.room_id}" />
+	<input type="hidden" name="page" value="${page}" />
+	<div class="modal fade" id="room-delete-modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="width: 24rem;">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p>정말 삭제 하시겠습니까?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary btn-sm">삭제</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

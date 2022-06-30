@@ -99,6 +99,11 @@ function check() {
 		$("#signup-password").val("").focus();
 		return false;
 	}
+	if ($.trim($("#signup-password").val().length) < 8) {
+		alert("비밀번호를 8자 이상 입력해주세요.");
+		$("#signup-password").val("").focus();
+		return false;
+	}
 	if ($.trim($("#signup-password-confirm").val()) == "") {
 		alert("비밀번호 확인을 입력해주세요.");
 		$("#signup-password-confirm").val("").focus();
@@ -164,7 +169,6 @@ function postcheck() {
 			"width=420,height=200,scrollbars=yes");
 }
 
-//아이디 중복 체크
 function idcheck() {
 	$("#idcheck").hide();
 	var memid = $("#signup-id").val();
@@ -197,7 +201,7 @@ function idcheck() {
 		return false;
 	};
 
-	// 아이디 중복확인
+	// 아이디 중복 확인
 	$.ajax({
 		type : "POST",
 		url : "idcheck",

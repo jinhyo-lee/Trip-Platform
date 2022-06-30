@@ -3,10 +3,7 @@
 
 <mapper namespace="roomns">
 
-	<select id="getCount" resultType="int">
-		select count(room_id) from room
-	</select>
-
+	<!-- 목록 -->
 	<select id="getList" parameterType="int" resultType="room">
 	    <![CDATA[
 		select * from (select rownum rnum, room.* from  
@@ -14,5 +11,173 @@
 	    where rnum >= ((#{page}-1) * 9+1)  and rnum <= (#{page} * 9)
 		]]>
 	</select>
+
+	<!-- 필터 -->
+	<select id="getFilterList" parameterType="roomFilter" resultType="room">
+	    <![CDATA[ 
+		select * from (select rownum rnum, room.* from 
+		]]>
+	  	(select * from room where room_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and room_addr like '%' || #{district, jdbcType=VARCHAR} || '%'	
+	  	<if test='rate > 0'>
+			<![CDATA[ 
+			and room_rate >= #{rate, jdbcType=VARCHAR} and room_rate < #{rate, jdbcType=VARCHAR} + 1
+			]]>
+		</if>
+	  	<if test='type.size != 0'>
+			and room_type in
+			<foreach item="typeChk" index="idx" collection="type" open="(" separator="," close=")">
+				#{typeChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='option.size != 0'>
+			and room_option in
+			<foreach item="optionChk" index="idx" collection="option" open="(" separator="," close=")">
+				#{optionChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='star.size != 0'>
+			and room_star in
+			<foreach item="starChk" index="idx" collection="star" open="(" separator="," close=")">
+				#{starChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>  
+		<![CDATA[ 	
+	  	order by room_id asc) room where room_cost >= #{minCost, jdbcType=INTEGER} and room_cost <= #{maxCost, jdbcType=INTEGER} ) 
+	    where rnum >= ((#{page, jdbcType=INTEGER}-1) * 9+1)  and rnum <= (#{page, jdbcType=INTEGER} * 9)
+	    ]]>
+		
+	</select>
+	
+	<select id="getFilterCount" parameterType="roomFilter" resultType="int">
+		select count(room_id) from
+		( select * from room where room_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and room_addr like '%' || #{district, jdbcType=VARCHAR} || '%' 
+		<if test='rate > 0'>
+			<![CDATA[ 
+			and room_rate >= #{rate, jdbcType=VARCHAR} and room_rate < #{rate, jdbcType=VARCHAR} + 1
+			]]>
+		</if>
+		<if test='type.size != 0'>
+			and room_type in
+			<foreach item="typeChk" index="idx" collection="type" open="(" separator="," close=")">
+				#{typeChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='option.size != 0'>
+			and room_option in
+			<foreach item="optionChk" index="idx" collection="option" open="(" separator="," close=")">
+				#{optionChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test='star.size != 0'>
+			and room_star in
+			<foreach item="starChk" index="idx" collection="star" open="(" separator="," close=")">
+				#{starChk, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<![CDATA[
+		and room_cost >= #{minCost, jdbcType=INTEGER} and room_cost <= #{maxCost, jdbcType=INTEGER} )
+		]]>
+	</select>
+	
+	<!-- 상세 -->
+	<select id="getDetail" parameterType="int" resultType="room">
+		select * from room where room_id = #{room_id}
+	</select>
+
+	<!-- 데이터 수 -->
+	<select id="getCount" resultType="int">
+		select count(room_id) from room
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insert" parameterType="room">
+		insert into room (
+						  room_id,
+						  room_name,
+						  room_content,
+						  room_photo,
+						  room_addr,
+						  room_tel,
+						  room_option,
+						  room_type,
+						  room_star,
+						  room_cost,
+						  room_rate )
+				  values (
+						  room_seq.nextval,
+						  #{room_name, jdbcType=VARCHAR},
+						  #{room_content, jdbcType=VARCHAR},
+						  #{room_photo, jdbcType=VARCHAR},
+						  #{room_addr, jdbcType=VARCHAR},
+						  #{room_tel, jdbcType=VARCHAR},
+						  #{room_option, jdbcType=VARCHAR},
+						  #{room_type, jdbcType=VARCHAR},
+						  #{room_star, jdbcType=VARCHAR},
+						  #{room_cost, jdbcType=VARCHAR},
+						  #{room_rate, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modify" parameterType="room">
+		update room set
+			room_name=#{room_name, jdbcType=VARCHAR},
+			room_content=#{room_content, jdbcType=VARCHAR},
+			room_photo=#{room_photo, jdbcType=VARCHAR},
+			room_addr=#{room_addr, jdbcType=VARCHAR},
+			room_tel=#{room_tel, jdbcType=VARCHAR},
+			room_option=#{room_option, jdbcType=VARCHAR},
+			room_type=#{room_type, jdbcType=VARCHAR},
+			room_star=#{room_star, jdbcType=VARCHAR},
+			room_cost=#{room_cost, jdbcType=VARCHAR},
+			room_rate=#{room_rate, jdbcType=VARCHAR}
+		where room_id=#{room_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from room where room_id=#{room_id}
+	</delete>
+
+	<!-- 인근 장소 -->
+	<select id="getQueryList" parameterType="String" resultType="place">
+	    <![CDATA[
+	     select * from
+		 (select place_id, place_name, place_addr, place_type, place_rate, place_photo from place ORDER BY dbms_random.value)
+         where place_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+         union all
+         select * from
+         (select food_id, food_name, food_addr, food_type, food_rate, food_photo from food ORDER BY dbms_random.value)
+         where food_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+         union all
+         select * from
+         (select room_id, room_name, room_addr, room_type, room_rate, room_photo from room ORDER BY dbms_random.value)
+         where room_addr like '%' || #{city, jdbcType=VARCHAR} || '%' and rownum <= 2
+		]]>
+	</select>
+	
+	<!-- 평점 갱신 -->
+	<update id="updateRate" parameterType="room">
+		update room set room_rate=#{room_rate, jdbcType=VARCHAR} where room_id=#{room_id}
+	</update>
+
+	<!-- 북마크 -->
+	<select id="getMarkCount" parameterType="roombookmark" resultType="int">
+		select count(room_id) from roombookmark where id=#{id, jdbcType=VARCHAR} and room_id=#{room_id, jdbcType=INTEGER}
+	</select>
+
+	<insert id="addMark" parameterType="roombookmark">
+		insert into roombookmark (
+								  room_mark_id,
+								  room_id,
+								  id )
+						  values (
+								  room_bookmark_seq.nextval,
+								  #{room_id, jdbcType=INTEGER},
+								  #{id, jdbcType=VARCHAR})
+	</insert>
+
+	<delete id="delMark" parameterType="roombookmark">
+		delete from roombookmark where id=#{id, jdbcType=VARCHAR} and room_id=#{room_id, jdbcType=INTEGER}
+	</delete>
 
 </mapper>

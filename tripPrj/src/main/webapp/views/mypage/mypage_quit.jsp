@@ -1,14 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>회원 탈퇴</title>
-    <!-- SEO Meta Tags-->
-    <meta name="description" content="Finder - Directory &amp; Listings Bootstrap Template">
-    <meta name="keywords" content="bootstrap, business, directory, listings, e-commerce, car dealer, city guide, real estate, job board, user account, multipurpose, ui kit, html5, css3, javascript, gallery, slider, touch">
-    <meta name="author" content="Createx Studio">
+    <title>Quit</title>
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon and Touch Icons-->
@@ -118,7 +115,7 @@
     </div>
       <!-- Page container-->
       <div class="container mt-5 mb-md-4 py-5">
-        <form method="post" action="memberDelete">
+        <form method="post" action="memberQuit">
           <!-- Page content-->
           <div class="col-lg-8">
             <!-- Title-->
@@ -130,11 +127,11 @@
               <div class="row">
                 <div class="col-sm-6 mb-3">
                   <label class="form-label">아이디</label>
-                  <input class="form-control" placeholder="${d_id}" disabled>
+                  <input class="form-control" placeholder="${id}" disabled>
                 </div>
                 <div class="col-sm-6 mb-3">
                   <label class="form-label">이름</label>
-                  <input class="form-control" placeholder="${d_name}" disabled>
+                  <input class="form-control" placeholder="${name}" disabled>
                 </div>
                 <div class="col-12 mb-3 pb-3">
                   <label class="form-label">비밀번호</label>
@@ -142,7 +139,6 @@
                 </div>
               </div>
             </section>
-
             <!-- Action buttons -->
             <section class="d-sm-flex justify-content-between pt-2">
 	            <button type="submit" class="btn btn-primary">탈퇴</button>
@@ -151,7 +147,6 @@
           </div>
       	</form>
       </div>
-    
     <!-- Vendor scrits: js libraries and plugins-->
     <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/simplebar/dist/simplebar.min.js"></script>

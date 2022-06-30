@@ -17,6 +17,6 @@ public class FoodBean {
 	private String food_type;
 	private String food_menu;
 	private int food_cost;
-	private String food_rate;
+	private double food_rate;
 	private String admin_id;
 }

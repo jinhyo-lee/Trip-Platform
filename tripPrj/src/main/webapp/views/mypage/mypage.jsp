@@ -7,10 +7,6 @@
 <head>
 <meta charset="utf-8">
 <title>My Page</title>
-<!-- SEO Meta Tags-->
-<meta name="description" content="Finder - Directory &amp; Listings Bootstrap Template">
-<meta name="keywords" content="bootstrap, business, directory, listings, e-commerce, car dealer, city guide, real estate, job board, user account, multipurpose, ui kit, html5, css3, javascript, gallery, slider, touch">
-<meta name="author" content="Createx Studio">
 <!-- Viewport-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Favicon and Touch Icons-->
@@ -128,198 +124,184 @@ keyframes spinner { 100% {
 </head>
 <!-- Body-->
 <body>
-	<!-- Page loading spinner-->
-	<div class="page-loading active">
-		<div class="page-loading-inner">
-			<div class="page-spinner"></div>
-			<span>Loading...</span>
-		</div>
-	</div>
-	<main class="page-wrapper">
-		<!-- Navbar-->
-		<%@ include file="../navbar.jsp" %>
-		<!-- Page content-->
-		<div class="container pt-5 pb-lg-4 mt-5 mb-sm-2">
-			<!-- Breadcrumb-->
-			<nav class="mb-4 pt-md-3" aria-label="Breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="main">홈</a></li>
-					<li class="breadcrumb-item"><a href="myPage">계정</a></li>
-					<li class="breadcrumb-item active" aria-current="page">회원정보</li>
-				</ol>
-			</nav>
-			<!-- Page content-->
-			<form method="post" action="memberModify" enctype="multipart/form-data">
-				  <input type="hidden" name="id" value="${sessionScope.id} ">
-			<div class="row">
-				<!-- Sidebar-->
-				<aside class="col-lg-4 col-md-5 pe-xl-4 mb-5">
-					<!-- Account nav-->
-					<div class="card card-body border-0 shadow-sm pb-1 me-lg-1">
-						<div class="d-flex d-md-block d-lg-flex align-items-start pt-lg-2 mb-1">
-							<c:if test="${!empty editm.profile}">
-							<label for="input-file"><img class="rounded-circle" src="upload/${editm.profile}" width="100"/></label>
-							</c:if>
-							<c:if test="${empty editm.profile}">
-							<label for="input-file"><img class="rounded-circle" src="img/avatars/13.png" width="100"/></label>
-							</c:if>
-							<input type="file" id="input-file" name="profiles" style="display: none">							
-							<div class="pt-md-2 pt-lg-0 ps-3 ps-md-0 ps-lg-3">
-								<h2 class="fs-lg mb-0">${editm.id}</h2>
-								<ul class="list-unstyled fs-sm mt-3 mb-0">
-									<li><a class="nav-link fw-normal p-0" href="tel:3025550107"><i class="fi-phone opacity-60 me-2"></i>${editm.tel}</a></li>
-									<li><a class="nav-link fw-normal p-0" href="mailto:annette_black@email.com"><i class="fi-mail opacity-60 me-2"></i>${editm.mail}</a></li>
-								</ul>
-							</div>							
-						</div>
-						<div class="collapse d-md-block mt-3" id="account-nav">
-							<div class="card-nav">
-								<a class="card-nav-link active" href="real-estate-account-info.html">
-								<i class="fi-user opacity-60 me-2"></i>개인 정보</a> 
-								<a class="card-nav-link" href="#">
-								<i class="fi-bed opacity-60 me-2"></i>예약내역</a> 
-								<a class="card-nav-link" href="#">
-								<i class="fi-bookmark opacity-60 me-2"></i>북마크</a> 
-								<a class="card-nav-link" href="#">
-								<i class="fi-star opacity-60 me-2"></i>리뷰</a> 
-								<a class="card-nav-link" href="#">
-								<i class="fi-help opacity-60 me-2"></i>Q&A</a> 
-								<a class="card-nav-link" href="mypageLogout">
-								<i class="fi-logout opacity-60 me-2"></i>로그아웃</a>
-							</div>
-						</div>
-					</div>
-				</aside>
-				<!-- Content-->
-				<div class="col-lg-8 col-md-7 mb-5" >
-					<h1 class="h2">개인 정보</h1>
-						<div class="border rounded-3 p-3 mb-4" id="personal-info">
-							<!-- Name-->
-							<div class="border-bottom pb-3 mb-3">
-								<div class="d-flex align-items-center justify-content-between">
-									<div class="pe-2">
-										<label class="form-label fw-bold">이름</label>
-										<div id="name-value">${editm.name}</div>
-									</div>
-									<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
-										<a class="nav-link py-0" href="#name-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
-									</div>
-								</div>
-								<div class="collapse" id="name-collapse" data-bs-parent="#personal-info">
-									<input class="form-control mt-3" type="text" name="name" id="name" data-bs-unset-value="Not specified" value="${editm.name}">
-								</div>
-							</div>
-							<!-- Password-->
-							<div class="border-bottom pb-3 mb-3">
-								<div class="d-flex align-items-center justify-content-between">
-									<div class="pe-2">
-										<label class="form-label fw-bold">비밀번호</label>
-										<div>${encrypt}</div>
-									</div>
-									<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
-										<a class="nav-link py-0" href="#password-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
-									</div>
-								</div>
-								<div class="collapse" id="password-collapse" data-bs-parent="#auth-info">
-									<div class="row gx-3 align-items-center my-3">
-										<label class="col-sm-4 col-md-3 col-form-label" for="account-password-current">새로운 비밀번호 :</label>
-										<div class="col-sm-8 col-md-9">
-											<div class="password-toggle">
-												<input class="form-control" type="password" name="pw" id="pw" placeholder="Enter new password" required value="${editm.pw}"> 
-												<label class="password-toggle-btn" aria-label="Show/hide password">
-													<input class="password-toggle-check" type="checkbox"><span class="password-toggle-indicator"></span>
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- Email-->
-							<div class="border-bottom pb-3 mb-3">
-								<div class="d-flex align-items-center justify-content-between">
-									<div class="pe-2">
-										<label class="form-label fw-bold">이메일</label>
-										<div id="email-value">${editm.mail}</div>
-									</div>
-									<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
-										<a class="nav-link py-0" href="#email-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
-									</div>
-								</div>
-								<div class="collapse" id="email-collapse" data-bs-parent="#personal-info">
-									<input class="form-control mt-3" type="email" name="mail" id="mail" data-bs-unset-value="Not specified" value="${editm.mail}">
-								</div>
-							</div>
-							<!-- Phone number-->
-							<div class="border-bottom pb-3 mb-3">
-								<div class="d-flex align-items-center justify-content-between">
-									<div class="pe-2">
-										<label class="form-label fw-bold">연락처</label>
-										<div id="phone-value">${editm.tel}</div>
-									</div>
-									<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
-										<a class="nav-link py-0" href="#phone-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
-									</div>
-								</div>
-								<div class="collapse" id="phone-collapse" data-bs-parent="#personal-info">
-									<input class="form-control mt-3" type="text" name="tel" id="tel" data-bs-unset-value="Not specified" value="${editm.tel}">
-								</div>
-							</div>
-							<!-- Address-->
-							<div>
-								<div class="d-flex align-items-center justify-content-between">
-									<div class="pe-2">
-										<label class="form-label fw-bold">주소</label>
-										<div id="address-value">${editm.addr1}</div>
-									</div>
-									<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
-										<a class="nav-link py-0" href="#address-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
-									</div>
-								</div>
-								<div class="collapse" id="address-collapse" data-bs-parent="#personal-info">
-								<br>
-								<div class="input-group">
-									<input class="form-control" type="text" size="5" name="post" id="post" placeholder="우편번호" value="${editm.post}">
-	  								<button class="btn btn-primary" type="button" onclick="openDaumPostcode()">우편번호 검색</button>
-								</div>
-									<input class="form-control mt-3" type="text" name="addr1" id="addr1" data-bs-unset-value="Not specified" placeholder="주소" value="${editm.addr1}">
-									<input class="form-control mt-3" type="text" name="addr2" id="addr2" data-bs-unset-value="Not specified" placeholder="상세주소" value="${editm.addr2}">
-								</div>
-							</div>
-						</div>
-						
-						<!-- Button-->
-						<div class="d-flex align-items-center justify-content-between mt-4 pt-4 pb-1">
-							<button class="btn btn-primary px-3 px-sm-4" type="submit">프로필 수정</button>
-						</div>
-					<div class="d-flex align-items-center justify-content-between mt-4 pt-4 pb-1"></div>
-				</div>
+<!-- Page loading spinner-->
+<div class="page-loading active">
+  <div class="page-loading-inner">
+    <div class="page-spinner"></div><span>Loading...</span>
+  </div>
+</div>
+<main class="page-wrapper">
+  <!-- Navbar-->
+  <%@ include file="../navbar.jsp" %>
+  <!-- Page content-->
+  <div class="container pt-5 pb-lg-4 mt-5 mb-sm-2">
+	<!-- Breadcrumb-->
+	<nav class="mb-4 pt-md-3" aria-label="Breadcrumb">
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="main">홈</a></li>
+		<li class="breadcrumb-item"><a href="myPage">계정</a></li>
+		<li class="breadcrumb-item active" aria-current="page">회원정보</li>
+	  </ol>
+	</nav>
+	<!-- Page content-->
+	<form method="post" action="memberModify" enctype="multipart/form-data">
+	  <input type="hidden" name="id" value="${sessionScope.id} ">
+	  <div class="row">
+	    <!-- Sidebar-->
+	    <aside class="col-lg-4 col-md-5 pe-xl-4 mb-5">
+		<!-- Account nav-->
+		<div class="card card-body border-0 shadow-sm pb-1 me-lg-1">
+		  <div class="d-flex d-md-block d-lg-flex align-items-start pt-lg-2 mb-1">
+			<c:if test="${!empty member.profile}">
+			<label for="input-file"><img class="rounded-circle" src="upload/${member.profile}" width="100"/></label>
+			</c:if>
+			<c:if test="${empty member.profile}">
+			<label for="input-file"><img class="rounded-circle" src="img/avatars/13.png" width="100"/></label>
+			</c:if>
+			<input type="file" id="input-file" name="profiles" style="display: none">							
+			<div class="pt-md-2 pt-lg-0 ps-3 ps-md-0 ps-lg-3">
+			  <h2 class="fs-lg mb-0">${member.id}</h2>
+			  <ul class="list-unstyled fs-sm mt-3 mb-0">
+				<li><a class="nav-link fw-normal p-0" href="tel:3025550107"><i class="fi-phone opacity-60 me-2"></i>${member.tel}</a></li>
+				<li><a class="nav-link fw-normal p-0" href="mailto:annette_black@email.com"><i class="fi-mail opacity-60 me-2"></i>${member.mail}</a></li>
+			  </ul>
+			</div>							
+		  </div>
+		  <div class="collapse d-md-block mt-3" id="account-nav">
+			<div class="card-nav">
+			  <a class="card-nav-link active" href="myPage"><i class="fi-user opacity-60 me-2"></i>개인 정보</a> 
+			  <a class="card-nav-link" href="myBookmarkList"><i class="fi-bookmark opacity-60 me-2"></i>북마크</a> 
+			  <a class="card-nav-link" href="myReviewList"><i class="fi-star opacity-60 me-2"></i>리뷰</a> 
+			  <a class="card-nav-link" href="myQnaList"><i class="fi-help opacity-60 me-2"></i>Q&A</a> 
+			  <a class="card-nav-link" href="logout"><i class="fi-logout opacity-60 me-2"></i>로그아웃</a>
 			</div>
-			</form>
-			<form method="post" action="memberDeleteForm" enctype="multipart/form-data">
-				<input type="hidden" name="id" value="${sessionScope.id} ">
-				<button class="btn btn-link btn-sm px-0" type="submit"><i class="fi-trash me-2"></i>회원 탈퇴</button> 
-			</form>
+		  </div>
 		</div>
-	</main>
-	
-	<!-- Footer-->
-	<footer class="footer bg-secondary pt-5">
-		<!-- Banner-->
-		<div class="text-center fs-sm pt-4 mt-3 pb-2">&copy; All rights reserved. Made by <a href='https://createx.studio/' class='d-inline-block nav-link p-0' target='_blank' rel='noopener'>Createx Studio</a></div>
-	</footer>
-	<!-- Back to top button-->
-	<a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon fi-chevron-up"> </i></a>
-	<!-- Vendor scrits: js libraries and plugins-->
-	<script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/simplebar/dist/simplebar.min.js"></script>
-	<script src="vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
-	<script src="vendor/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
-	<script src="vendor/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-	<script src="vendor/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.min.js"></script>
-	<script src="vendor/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.min.js"></script>
-	<script src="vendor/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.min.js"></script>
-	<script src="vendor/filepond/dist/filepond.min.js"></script>
-	<!-- Main theme script-->
-	<script src="js/theme.min.js"></script>
+	    </aside>
+	    <!-- Content-->
+	    <div class="col-lg-8 col-md-7 mb-5" >
+		  <h1 class="h2">개인 정보</h1>
+		  <div class="border rounded-3 p-3 mb-4" id="personal-info">
+			<!-- Name-->
+			<div class="border-bottom pb-2 mb-3">
+			  <div class="d-flex align-items-center justify-content-between">
+				<div class="pe-2">
+				  <label class="form-label fw-bold">이름</label>
+				  <div id="name-value">${member.name}</div>
+				</div>
+				<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
+				  <a class="nav-link py-0" href="#name-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
+				</div>
+			  </div>
+			  <div class="collapse" id="name-collapse" data-bs-parent="#personal-info">
+				<input class="form-control mt-3" type="text" name="name" id="name" data-bs-unset-value="Not specified" value="${member.name}">
+			  </div>
+			</div>
+			<!-- Password-->
+			<div class="border-bottom pb-2 mb-3">
+			  <div class="d-flex align-items-center justify-content-between">
+				<div class="pe-2">
+				  <label class="form-label fw-bold">비밀번호</label>
+				  <div>${encrypt}</div>
+				</div>
+				<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
+				  <a class="nav-link py-0" href="#password-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
+				</div>
+			  </div>
+			<div class="collapse" id="password-collapse" data-bs-parent="#auth-info">
+			  <div class="row gx-3 align-items-center my-3">
+			    <label class="col-sm-4 col-md-3 col-form-label" for="account-password-current">새로운 비밀번호 :</label>
+			    <div class="col-sm-8 col-md-9">
+			      <div class="password-toggle">
+				    <input class="form-control" type="password" name="pw" id="pw" placeholder="Enter new password" required value="${member.pw}"> 
+				    <label class="password-toggle-btn" aria-label="Show/hide password">
+					  <input class="password-toggle-check" type="checkbox"><span class="password-toggle-indicator"></span>
+				    </label>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			</div>
+			<!-- Email-->
+			<div class="border-bottom pb-2 mb-3">
+			  <div class="d-flex align-items-center justify-content-between">
+				<div class="pe-2">
+				  <label class="form-label fw-bold">이메일</label>
+				  <div id="email-value">${member.mail}</div>
+				</div>
+				<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
+				  <a class="nav-link py-0" href="#email-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
+				</div>
+			  </div>
+			  <div class="collapse" id="email-collapse" data-bs-parent="#personal-info">
+				<input class="form-control mt-3" type="email" name="mail" id="mail" data-bs-unset-value="Not specified" value="${member.mail}">
+			  </div>
+			</div>
+			<!-- Phone number-->
+			<div class="border-bottom pb-2 mb-3">
+			  <div class="d-flex align-items-center justify-content-between">
+				<div class="pe-2">
+				  <label class="form-label fw-bold">연락처</label>
+				  <div id="phone-value">${member.tel}</div>
+				</div>
+				<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
+				  <a class="nav-link py-0" href="#phone-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
+				</div>
+			  </div>
+			  <div class="collapse" id="phone-collapse" data-bs-parent="#personal-info">
+				<input class="form-control mt-3" type="text" name="tel" id="tel" data-bs-unset-value="Not specified" value="${member.tel}">
+			  </div>
+			</div>
+			<!-- Address-->
+			<div class="border-bottom pb-2 mb-3">
+			  <div class="d-flex align-items-center justify-content-between">
+				<div class="pe-2">
+				  <label class="form-label fw-bold">주소</label>
+				  <div id="address-value">${member.addr1}</div>
+				</div>
+				<div class="me-n3" data-bs-toggle="tooltip" title="Edit">
+				  <a class="nav-link py-0" href="#address-collapse" data-bs-toggle="collapse"><i class="fi-edit"></i></a>
+				</div>
+			  </div>
+			  <div class="collapse" id="address-collapse" data-bs-parent="#personal-info"><br>
+			    <div class="input-group">
+				  <input class="form-control" type="text" size="5" name="post" id="post" placeholder="우편번호" value="${member.post}">
+				  <button class="btn btn-primary" type="button" onclick="openDaumPostcode()">우편번호 검색</button>
+			    </div>
+				<input class="form-control mt-3" type="text" name="addr1" id="addr1" data-bs-unset-value="Not specified" placeholder="주소" value="${member.addr1}">
+				<input class="form-control mt-3" type="text" name="addr2" id="addr2" data-bs-unset-value="Not specified" placeholder="상세주소" value="${member.addr2}">
+			  </div>
+			</div>
+		  </div>
+		  <!-- Button-->
+		  <div class="d-flex align-items-center justify-content-between mt-4 pt-4 pb-1">
+			<button class="btn btn-primary px-3 px-sm-4" type="submit">프로필 수정</button>
+			<button class="btn btn-link btn-sm px-0" type="button" onclick="location.href='memberQuitForm';"><i class="fi-trash me-2"></i>회원 탈퇴</button> 
+		  </div>
+		  <div class="d-flex align-items-center justify-content-between mt-4 pt-4 pb-1"></div>
+	    </div>
+	  </div>
+	</form>
+  </div>
+</main>
+<!-- Footer-->
+<footer class="footer bg-secondary pt-5">
+<!-- Banner-->
+<div class="text-center fs-sm pt-4 mt-3 pb-2">&copy; All rights reserved.&ensp;<b>My Seoul Trip</b></div>
+</footer>
+<!-- Back to top button-->
+<a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon fi-chevron-up"> </i></a>
+<!-- Vendor scrits: js libraries and plugins-->
+<script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="vendor/simplebar/dist/simplebar.min.js"></script>
+<script src="vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+<script src="vendor/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
+<script src="vendor/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="vendor/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.min.js"></script>
+<script src="vendor/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.min.js"></script>
+<script src="vendor/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.min.js"></script>
+<script src="vendor/filepond/dist/filepond.min.js"></script>
+<!-- Main theme script-->
+<script src="js/theme.min.js"></script>
 </body>
 </html>
