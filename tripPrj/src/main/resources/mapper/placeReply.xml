@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="placeReplyns">
+
+	<!-- 목록 -->
+	<select id="getReplyList" parameterType="int" resultType="placeReply">
+		select * from placereply where place_rev_id=#{place_rev_id} order by place_reply_id
+	</select>
+
+	<!-- 상세 -->
+	<select id="getReplyDetail" parameterType="int" resultType="placeReply">
+		select * from placereply where place_reply_id=#{place_reply_id}
+	</select>
+
+	<!-- 댓글 수 -->
+	<select id="getReplyCount" resultType="int">
+		select count(place_reply_id) from placereply where place_rev_id=#{place_rev_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertReply" parameterType="placeReply">
+		insert into placereply (
+							   place_reply_id,
+							   reply_content,
+							   reply_reg,
+							   place_rev_id,
+							   id,
+							   userphoto )
+					   values (
+							   place_reply_seq.nextval,
+							   #{reply_content},
+							   SYSDATE,
+							   #{place_rev_id},
+							   #{id, jdbcType=VARCHAR},
+							   #{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyReply" parameterType="placeReply">
+		update placereply set reply_content=#{reply_content}, reply_reg=sysdate where place_reply_id=#{place_reply_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteReply" parameterType="int">
+		delete from placereply where place_reply_id=#{place_reply_id}
+	</delete>
+
+</mapper>

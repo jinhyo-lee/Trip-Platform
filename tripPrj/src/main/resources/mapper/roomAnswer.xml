@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="roomAnswerns">
+
+	<!-- 목록 -->
+	<select id="getAnswerList" parameterType="int" resultType="roomAnswer">
+		select * from roomanswer where room_qna_id=#{room_qna_id} order by room_answer_id
+	</select>
+
+	<!-- 상세 -->
+	<select id="getAnswerDetail" parameterType="int" resultType="roomAnswer">
+		select * from roomanswer where room_answer_id=#{room_answer_id}
+	</select>
+
+	<!-- 답변 수 -->
+	<select id="getAnswerCount" resultType="int">
+		select count(room_answer_id) from roomanswer where room_qna_id=#{room_qna_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertAnswer" parameterType="roomAnswer">
+		insert into roomanswer (
+								room_answer_id,
+								answer_content,
+								answer_reg,
+								room_qna_id,
+								id,
+								userphoto )
+					    values (
+								room_answer_seq.nextval,
+								#{answer_content},
+								SYSDATE,
+								#{room_qna_id},
+								#{id, jdbcType=VARCHAR},
+								#{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyAnswer" parameterType="roomAnswer">
+		update roomanswer set answer_content=#{answer_content}, answer_reg=sysdate where room_answer_id=#{room_answer_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteAnswer" parameterType="int">
+		delete from roomanswer where room_answer_id=#{room_answer_id}
+	</delete>
+
+</mapper>

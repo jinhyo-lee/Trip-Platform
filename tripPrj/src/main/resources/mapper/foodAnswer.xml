@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodAnswerns">
+
+	<!-- 목록 -->
+	<select id="getAnswerList" parameterType="int" resultType="foodAnswer">
+		select * from foodanswer where food_qna_id=#{food_qna_id} order by food_answer_id
+	</select>
+
+	<!-- 상세 -->
+	<select id="getAnswerDetail" parameterType="int" resultType="foodAnswer">
+		select * from foodanswer where food_answer_id=#{food_answer_id}
+	</select>
+
+	<!-- 답변 수 -->
+	<select id="getAnswerCount" resultType="int">
+		select count(food_answer_id) from foodanswer where food_qna_id=#{food_qna_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertAnswer" parameterType="foodAnswer">
+		insert into foodanswer (
+								food_answer_id,
+								answer_content,
+								answer_reg,
+								food_qna_id,
+								id,
+								userphoto )
+					    values (
+								food_answer_seq.nextval,
+								#{answer_content},
+								SYSDATE,
+								#{food_qna_id},
+								#{id, jdbcType=VARCHAR},
+								#{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyAnswer" parameterType="foodAnswer">
+		update foodanswer set answer_content=#{answer_content}, answer_reg=sysdate where food_answer_id=#{food_answer_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteAnswer" parameterType="int">
+		delete from foodanswer where food_answer_id=#{food_answer_id}
+	</delete>
+
+</mapper>

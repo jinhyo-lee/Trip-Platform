@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodReviewns">
+
+	<!-- 목록 -->
+	<select id="getReviewList" parameterType="int" resultType="foodReview">
+     	<![CDATA[
+		select * from (select rownum rnum, reviews.* from  
+	  	(select * from foodreview order by rev_reg desc) reviews) 
+	    where food_id=#{food_id}
+		]]>
+	</select>
+
+	<!-- 상세 -->
+	<select id="getReviewDetail" parameterType="int" resultType="foodReview">
+		select * from foodreview where food_rev_id=#{food_rev_id}
+	</select>
+
+	<!-- 리뷰 수 -->
+	<select id="getReviewCount" resultType="int">
+		select count(food_rev_id) from foodreview where food_id=#{food_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertReview" parameterType="foodReview">
+		insert into foodreview (
+								food_rev_id,
+								food_id,
+								rev_title,
+								rev_content,
+								rev_photo,
+								rev_reg,
+								rev_rate,
+								rev_like,
+								id,
+								userphoto )
+						values (
+								food_review_seq.nextval,
+								#{food_id},
+								#{rev_title, jdbcType=VARCHAR},
+								#{rev_content},
+								#{rev_photo, jdbcType=VARCHAR},
+								SYSDATE,
+								#{rev_rate},
+								#{rev_like, jdbcType=VARCHAR},
+								#{id},
+								#{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyReview" parameterType="foodReview">
+		update foodreview set 
+			rev_content=#{rev_content},
+			rev_rate=#{rev_rate},
+			rev_photo=#{rev_photo, jdbcType=VARCHAR},
+			rev_reg=SYSDATE
+		where food_rev_id=#{food_rev_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		delete from foodreview where food_rev_id=#{food_rev_id}
+	</delete>
+
+	<!-- 평점 -->
+	<select id="getAvgRate" resultType="double">
+		select round(avg(rev_rate),1) from foodreview where food_id=#{food_id}
+	</select>
+
+	<!-- 좋아요 -->
+	<select id="getLikeTotal" parameterType="int" resultType="int">
+		select count(food_rev_id) from foodlike where food_rev_id=#{food_rev_id, jdbcType=INTEGER}
+	</select>
+
+	<select id="getLikeCount" parameterType="foodLike" resultType="int">
+		select count(food_rev_id) from foodlike where id=#{id, jdbcType=VARCHAR} and food_rev_id=#{food_rev_id, jdbcType=INTEGER}
+	</select>
+
+	<insert id="addLike" parameterType="foodLike">
+		insert into foodlike (
+							  food_like_id,
+							  food_rev_id,
+							  id )
+				      values (
+							  food_like_seq.nextval,
+							  #{food_rev_id, jdbcType=INTEGER},
+							  #{id, jdbcType=VARCHAR} )
+	</insert>
+
+	<delete id="delLike" parameterType="foodLike">
+		delete from foodlike where id=#{id, jdbcType=VARCHAR} and food_rev_id=#{food_rev_id, jdbcType=INTEGER}
+	</delete>
+
+</mapper>

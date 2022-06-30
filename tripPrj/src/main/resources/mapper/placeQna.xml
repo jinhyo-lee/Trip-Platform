@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="placeQnans">
+
+	<!-- 목록 -->
+	<select id="getQnaList" parameterType="int" resultType="placeQna">
+     	<![CDATA[
+		select * from (select rownum rnum, qnas.* from  
+	  	(select * from placeqna order by qna_reg desc) qnas) 
+	    where place_id=#{place_id}
+		]]>
+	</select>
+
+	<!-- 상세 -->
+	<select id="getQnaDetail" parameterType="int" resultType="placeQna">
+		select * from placeqna where place_qna_id=#{place_qna_id}
+	</select>
+
+	<!-- 문의 수 -->
+	<select id="getQnaCount" resultType="int">
+		select count(place_qna_id) from placeqna where place_id=#{place_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertQna" parameterType="placeQna">
+		insert into placeqna (
+							 place_qna_id,
+							 qna_title,
+							 qna_content,
+							 qna_reg,
+							 place_id,
+							 id,
+							 userphoto )
+					 values (
+							 place_qna_seq.nextval,
+							 #{qna_title, jdbcType=VARCHAR},
+							 #{qna_content},
+							 SYSDATE,
+							 #{place_id},
+							 #{id},
+							 #{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyQna" parameterType="placeQna">
+		update placeqna set qna_content=#{qna_content}, qna_reg=SYSDATE where place_qna_id=#{place_qna_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteQna" parameterType="int">
+		delete from placeqna where place_qna_id=#{place_qna_id}
+	</delete>
+
+</mapper>

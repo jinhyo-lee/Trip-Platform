@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="foodReplyns">
+
+	<!-- 목록 -->
+	<select id="getReplyList" parameterType="int" resultType="foodReply">
+		select * from foodreply where food_rev_id=#{food_rev_id} order by food_reply_id
+	</select>
+
+	<!-- 상세 -->
+	<select id="getReplyDetail" parameterType="int" resultType="foodReply">
+		select * from foodreply where food_reply_id=#{food_reply_id}
+	</select>
+
+	<!-- 댓글 수 -->
+	<select id="getReplyCount" resultType="int">
+		select count(food_reply_id) from foodreply where food_rev_id=#{food_rev_id}
+	</select>
+
+	<!-- 작성 -->
+	<insert id="insertReply" parameterType="foodReply">
+		insert into foodreply (
+							   food_reply_id,
+							   reply_content,
+							   reply_reg,
+							   food_rev_id,
+							   id,
+							   userphoto )
+					   values (
+							   food_reply_seq.nextval,
+							   #{reply_content},
+							   SYSDATE,
+							   #{food_rev_id},
+							   #{id, jdbcType=VARCHAR},
+							   #{userphoto, jdbcType=VARCHAR} )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="modifyReply" parameterType="foodReply">
+		update foodreply set reply_content=#{reply_content}, reply_reg=sysdate where food_reply_id=#{food_reply_id}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteReply" parameterType="int">
+		delete from foodreply where food_reply_id=#{food_reply_id}
+	</delete>
+
+</mapper>
